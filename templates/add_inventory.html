@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}Add Inventory Item{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>📦 Add Inventory Item</h1>
+    <a href="{{ url_for('inventory') }}" class="btn btn-secondary">← Back</a>
+</div>
+<div class="form-card">
+    <form method="POST">
+        <div class="form-group">
+            <label>Item Name (must match Menu Item name exactly)</label>
+            <input type="text" name="item_name" class="form-control" placeholder="e.g. Chicken Biryani" required>
+        </div>
+        <div class="form-group">
+            <label>Stock Quantity</label>
+            <input type="number" name="stock_quantity" class="form-control" placeholder="e.g. 50" required>
+        </div>
+        <div class="form-group">
+            <label>Unit</label>
+            <input type="text" name="unit" class="form-control" placeholder="e.g. plates, cups, pieces">
+        </div>
+        <div class="form-group">
+            <label>Low Stock Alert Threshold</label>
+            <input type="number" name="threshold" class="form-control" value="5">
+        </div>
+        <button type="submit" class="btn btn-primary">✅ Add to Inventory</button>
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,121 @@
+{% extends "base.html" %}
+{% block title %}New Order{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>➕ Place New Order</h1>
+    <a href="{{ url_for('orders') }}" class="btn btn-secondary">← Back</a>
+</div>
+
+<div class="form-card">
+    <form method="POST" id="orderForm">
+
+        <div class="form-row">
+            <div class="form-group">
+                <label>Customer</label>
+                <select name="customer_id" class="form-control" required>
+                    <option value="">-- Select Customer --</option>
+                    {% for c in customers %}
+                    <option value="{{ c.customer_id }}">{{ c.name }} ({{ c.phone }})</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Staff (Cashier)</label>
+                <select name="staff_id" class="form-control" required>
+                    <option value="">-- Select Staff --</option>
+                    {% for s in staff %}
+                    <option value="{{ s.staff_id }}">{{ s.name }} - {{ s.role }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+
+        <h3>🍽️ Order Items</h3>
+        <div id="order-items">
+            <div class="order-item-row">
+                <select name="item_id[]" class="form-control item-select" onchange="updatePrice(this)">
+                    <option value="">-- Select Item --</option>
+                    {% for item in menu_items %}
+                    <option value="{{ item.item_id }}" data-price="{{ item.price }}">
+                        {{ item.name }} ({{ item.category }}) - Rs. {{ "%.2f"|format(item.price) }}
+                    </option>
+                    {% endfor %}
+                </select>
+                <input type="number" name="quantity[]" class="form-control qty-input" placeholder="Qty" min="1" value="1" style="width:80px">
+                <span class="item-price">Rs. 0.00</span>
+                <button type="button" class="btn btn-sm btn-danger" onclick="removeRow(this)">✕</button>
+            </div>
+        </div>
+
+        <button type="button" class="btn btn-secondary" onclick="addItemRow()">➕ Add Another Item</button>
+
+        <div class="total-display">
+            <strong>Total: Rs. <span id="grand-total">0.00</span></strong>
+        </div>
+
+        <div class="form-group">
+            <label>Payment Method</label>
+            <select name="payment_method" class="form-control">
+                <option value="Cash">Cash</option>
+                <option value="Card">Card</option>
+                <option value="Online">Online Transfer</option>
+            </select>
+        </div>
+
+        <button type="submit" class="btn btn-primary">✅ Place Order & Generate Bill</button>
+    </form>
+</div>
+
+<script>
+const menuItems = {
+    {% for item in menu_items %}
+    "{{ item.item_id }}": {{ item.price }},
+    {% endfor %}
+};
+
+function updatePrice(select) {
+    const row = select.closest('.order-item-row');
+    const price = menuItems[select.value] || 0;
+    const qty = row.querySelector('.qty-input').value || 1;
+    row.querySelector('.item-price').textContent = 'Rs. ' + (price * qty).toFixed(2);
+    updateTotal();
+}
+
+function addItemRow() {
+    const container = document.getElementById('order-items');
+    const firstRow = container.querySelector('.order-item-row');
+    const newRow = firstRow.cloneNode(true);
+    newRow.querySelectorAll('select')[0].value = '';
+    newRow.querySelector('.qty-input').value = 1;
+    newRow.querySelector('.item-price').textContent = 'Rs. 0.00';
+    container.appendChild(newRow);
+    newRow.querySelector('select').addEventListener('change', function() { updatePrice(this); });
+    newRow.querySelector('.qty-input').addEventListener('input', function() {
+        const row = this.closest('.order-item-row');
+        const sel = row.querySelector('.item-select');
+        updatePrice(sel);
+    });
+}
+
+function removeRow(btn) {
+    const rows = document.querySelectorAll('.order-item-row');
+    if (rows.length > 1) { btn.closest('.order-item-row').remove(); updateTotal(); }
+}
+
+function updateTotal() {
+    let total = 0;
+    document.querySelectorAll('.item-price').forEach(el => {
+        total += parseFloat(el.textContent.replace('Rs. ', '')) || 0;
+    });
+    document.getElementById('grand-total').textContent = total.toFixed(2);
+}
+
+document.querySelectorAll('.qty-input').forEach(input => {
+    input.addEventListener('input', function() {
+        const row = this.closest('.order-item-row');
+        updatePrice(row.querySelector('.item-select'));
+    });
+});
+</script>
+{% endblock %}

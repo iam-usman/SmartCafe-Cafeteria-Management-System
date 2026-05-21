@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartCafe - {% block title %}Dashboard{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+    <div class="nav-brand">
+        <span class="brand-icon">☕</span>
+        <span class="brand-name">SmartCafe</span>
+    </div>
+    <ul class="nav-links">
+        <li><a href="{{ url_for('index') }}" class="{% if request.endpoint == 'index' %}active{% endif %}">🏠 Dashboard</a></li>
+        <li><a href="{{ url_for('menu') }}" class="{% if 'menu' in request.endpoint %}active{% endif %}">🍽️ Menu</a></li>
+        <li><a href="{{ url_for('orders') }}" class="{% if 'order' in request.endpoint %}active{% endif %}">📋 Orders</a></li>
+        <li><a href="{{ url_for('customers') }}" class="{% if 'customer' in request.endpoint %}active{% endif %}">👥 Customers</a></li>
+        <li><a href="{{ url_for('inventory') }}" class="{% if 'inventory' in request.endpoint %}active{% endif %}">📦 Inventory</a></li>
+        <li><a href="{{ url_for('staff') }}" class="{% if 'staff' in request.endpoint %}active{% endif %}">👤 Staff</a></li>
+        <li><a href="{{ url_for('reports') }}" class="{% if 'report' in request.endpoint %}active{% endif %}">📊 Reports</a></li>
+    </ul>
+</nav>
+
+<!-- FLASH MESSAGES -->
+<div class="flash-container">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }}">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+</div>
+
+<!-- MAIN CONTENT -->
+<main class="main-content">
+    {% block content %}{% endblock %}
+</main>
+
+<footer class="footer">
+    <p>SmartCafe &copy; 2024 | Muhammad Usman (24P-0665) & Fida Hussain (24P-0676)</p>
+</footer>
+
+<script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>

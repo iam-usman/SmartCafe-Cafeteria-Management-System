@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}Customers{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>👥 Customers</h1>
+    <a href="{{ url_for('add_customer') }}" class="btn btn-primary">➕ Add Customer</a>
+</div>
+
+<table class="table">
+    <thead>
+        <tr><th>ID</th><th>Name</th><th>Phone</th></tr>
+    </thead>
+    <tbody>
+        {% for c in customers %}
+        <tr>
+            <td>{{ c.customer_id }}</td>
+            <td>{{ c.name }}</td>
+            <td>{{ c.phone or '-' }}</td>
+        </tr>
+        {% else %}
+        <tr><td colspan="3" class="empty-msg">No customers found.</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

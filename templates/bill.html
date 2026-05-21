@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block title %}Bill #{{ bill.order_id }}{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>🧾 Bill Receipt</h1>
+    <div>
+        <button onclick="window.print()" class="btn btn-secondary">🖨️ Print</button>
+        <a href="{{ url_for('orders') }}" class="btn btn-primary">← Orders</a>
+    </div>
+</div>
+
+<div class="bill-card" id="printable">
+    <div class="bill-header">
+        <h2>☕ SmartCafe</h2>
+        <p>Cafeteria Management System</p>
+        <hr>
+    </div>
+
+    <div class="bill-info">
+        <div>
+            <p><strong>Bill #:</strong> {{ bill.bill_id }}</p>
+            <p><strong>Order #:</strong> {{ bill.order_id }}</p>
+            <p><strong>Date:</strong> {{ bill.bill_date[:16] }}</p>
+        </div>
+        <div>
+            <p><strong>Customer:</strong> {{ bill.customer_name or 'Walk-in' }}</p>
+            <p><strong>Phone:</strong> {{ bill.phone or '-' }}</p>
+            <p><strong>Served by:</strong> {{ bill.staff_name or '-' }}</p>
+        </div>
+    </div>
+
+    <table class="table bill-table">
+        <thead>
+            <tr>
+                <th>Item</th>
+                <th>Qty</th>
+                <th>Unit Price</th>
+                <th>Subtotal</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in items %}
+            <tr>
+                <td>{{ item.name }}</td>
+                <td>{{ item.quantity }}</td>
+                <td>Rs. {{ "%.2f"|format(item.price) }}</td>
+                <td>Rs. {{ "%.2f"|format(item.subtotal) }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="bill-total">
+        <p><strong>Payment Method:</strong> {{ bill.payment_method }}</p>
+        <h3>Total: Rs. {{ "%.2f"|format(bill.total_amount) }}</h3>
+    </div>
+
+    <div class="bill-footer">
+        <p>Thank you for visiting SmartCafe! 🙏</p>
+    </div>
+</div>
+{% endblock %}
