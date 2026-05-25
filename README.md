@@ -30,7 +30,7 @@ The project is developed using Flask and SQLite with a simple and user-friendly 
 ---
 
 ## GitHub Repository URL
-[https://github.com/fam-usman/SmartCafe-Cafeteria-Management-System](https://github.com/iam-usman/SmartCafe-Cafeteria-Management-System)
+[https://github.com/iam-usman/SmartCafe-Cafeteria-Management-System](https://github.com/iam-usman/SmartCafe-Cafeteria-Management-System)
 
 ---
 
